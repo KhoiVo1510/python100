@@ -26,6 +26,17 @@ def genfibonacci(n = int):
         yield a
         a, b = b, a + b
 
+def gen_collatz(n = int):
+    reached_1 = False
+    while not(reached_1):
+        yield int(n)
+        if n%2 == 0:
+            n = n/2
+        elif n == 1:
+            reached_1 = True
+        else:
+            n = 3*n + 1
+
 class Ex_01():
     def __init__(self):
         print(self)
@@ -648,15 +659,201 @@ Viết hàm cho giá trị đầu vào là list số nguyên dương L và số 
 dương k. Tìm và trả về đoạn list dài nhất trong L có giá trị trung bình là k
 """
     
-class Ex_():
+class Ex_89():
+    def __init__(self):
+        print(self)
+        typo = True
+        while typo:
+            try:
+                # self.lst_A = list(float(x) for x in input("Nhập list A: ").split())
+                # self.lst_B = list(float(x) for x in input("Nhập list B: ").split())
+
+                self.lst_A = [random.randrange(1, 10, 1) for _ in range(50)]
+                self.lst_B = [random.randrange(1, 10, 1) for _ in range(50)]
+
+                self.u = float(input("Nhập U (Đô la): "))
+                self.v = float(input("Nhập V (Euro): "))
+                if len(self.lst_A) == len(self.lst_B):
+                    typo = False
+                else:
+                    print("Type again.")
+            except Exception as e:
+                print(f"Error(s) occur.\n{e}\nType again.\n")
+
+    def execute(self):
+        def get_offer(lst):
+            d = dict((i, v) for i, v in enumerate(lst))
+            rev_d = {}
+            for key, value in d.items():
+                rev_d.setdefault(value, set()).add(key)
+            return (min(rev_d), rev_d[min(rev_d)])
+        
+        def make_decision(o1 = (0,{}), o2 = (0,{})):
+            print("Danh sách các công ty có giá (Đô la) tốt: ", o1[1])
+            tmp = int(input("Chọn 1 công ty: "))
+            if tmp not in o1[1]:
+                return False
+            if tmp in o2[1]:
+                o2[1].remove(tmp)
+            print("Danh sách các công ty có giá (Euro) tốt: ", o2[1])
+            tmp = int(input("Chọn 1 công ty: "))
+            if tmp not in o2[1]:
+                return False
+            print("===> Output:")
+            kg = (self.u/o1[0]) + (self.v/o2[0])
+            print("Số lượng nguyên liệu S = {:.2f} kg".format(kg))
+            return True
+        
+        offer_u = get_offer(self.lst_A)
+        offer_v = get_offer(self.lst_B)
+        while not(make_decision(offer_u, offer_v)):
+            print("Choose again.")
+
+    def __str__(self):
+        return """
+Một người dùng số tiền là U đô-la và V Euro để mua một loại nguyên liệu sản xuất.
+Có N công ty nước ngoài bán nguyên liệu trên được đánh số từ 1 đến N.
+Công ty thứ i có giá bán Ai đô la/1 kg nguyên liệu và Bi Euro/1 kg nguyên liệu.
+Tuy nhiên, tại mỗi công ty chỉ bán nguyên liệu cho một khách hàng
+hoặc theo đô-la, hoặc theo Euro.
+Hãy giúp người đó tìm cách chọn ra 2 công ty để mua hàng sao cho số
+lượng nguyên liệu sản xuất có thể mua được là nhiều nhất.
+Nhập vào: U, V và List A và List B
+In ra : Số lượng nguyên liệu S (kg) người đó mua được với 2 chữ số thập phân.
+"""
+    
+class Ex_90():
     def __init__(self):
         print(self)
 
     def execute(self):
-        pass
+        while True:
+            n = (input("Enter the variable: n = "))
+            if n.isdigit():
+                print ("===> Output: ")
+                for num in range(1, int(n) + 1): 
+                    lst_print = []
+                    for num_gen in gen_collatz(num):
+                        lst_print.append(num_gen)
+                    _str = ", ".join(map(str,lst_print))
+                    print(_str)
+                break
+            print("Type again.\n")
 
     def __str__(self):
-        return "\n\n"
+        return """
+Phỏng đoán COLLATZ
+Giả sử ta có một số n. Phỏng đoán COLLATZ hoạt động như sau:
+Nếu n là số chẵn, thì ta chia n cho 2 (n/2)
+Nếu n là số lẻ, thì ta nhân n cho 3 rồi + 1 (3n + 1)
+Phỏng đoán hoạt động cho đến khi nào n = 1
+Yêu cầu:
+Nhập vào số nguyên dương m, hãy in ra dãy phỏng đoán COLLATZ từ 1 đến m
+(mỗi một phỏng đoán ta in trên 1 dòng, mỗi một số cách nhau một dấu phẩy)
+"""
+
+class Ex_91():
+    def __init__(self):
+        print(self)
+        typo = True
+        while typo:
+            try:
+                self.n = int(input("Số lượng phòng của khách sạn: N = "))
+                self.lst = list(int(x) for x in input("Số lượng khách từng đoàn: ").split())
+                if (self.n*2) > sum(self.lst):
+                    typo = False
+                else:
+                    print("Type again.")
+            except Exception as e:
+                print(f"Error(s) occur.\n{e}\nType again.\n")
+
+    def execute(self):
+        class Room():
+            def __init__(self, number):
+                self.capacity = 0
+                self.number = number
+            def add(self, num):
+                self.capacity += num
+
+        class Motel():
+            def __init__(self, max_rooms):
+                self.max_rooms = max_rooms
+                self.all_rooms = [Room(i) for i in range(1, self.max_rooms + 1)]
+                self.room_have_0 = [i for i in range(0, self.max_rooms)]
+                self.room_have_1 = []
+
+            def update_status_0(self, num):
+                if self.all_rooms[num].capacity == 1:
+                    self.room_have_1.append(num)
+                self.room_have_0.remove(num)
+            
+            def update_status_1(self, num):
+                self.room_have_1.remove(num)
+
+        class Group():
+            def __init__(self, members):
+                self.remain_members = members
+
+            def room_arrangement_1(self):
+                self.remain_members -= 1
+            def room_arrangement_2(self):
+                self.remain_members -= 2
+        def exe(n, lst):
+            motel = Motel(n)
+            group = [Group(mem) for mem in lst]
+            for grp in range(len(group)):
+                while group[grp].remain_members != 0:
+                    if len(motel.room_have_0):
+                        if group[grp].remain_members > 1:
+
+                            group[grp].room_arrangement_2()
+
+                            motel.all_rooms[motel.room_have_0[0]].add(2)
+                            motel.update_status_0(motel.room_have_0[0])
+
+                        elif group[grp].remain_members == 1:
+
+                            group[grp].room_arrangement_1()
+
+                            motel.all_rooms[motel.room_have_0[0]].add(1)
+                            motel.update_status_0(motel.room_have_0[0])
+                        else:
+                            break
+
+                    elif len(motel.room_have_1):
+                        group[grp].room_arrangement_1()
+
+                        motel.all_rooms[motel.room_have_1[0]].add(1)
+                        motel.update_status_1(motel.room_have_1[0])
+
+                    else:
+                        break
+            capa_per_room = []
+            for room in motel.all_rooms:
+                capa_per_room.append(room.capacity)
+            return capa_per_room
+            
+        capacity_per_room = exe(self.n, self.lst)
+        _str = ", ".join(map(str,capacity_per_room))
+        print(_str)
+
+    def __str__(self):
+        return """
+Một khách sạn có N phòng đôi được đánh số từ 1 đến N và M đoàn khách. Với mỗi đoàn khách, ta xếp mỗi cặp khách của đoàn vào một phòng trống theo thứ tự phòng tăng dần.
+Nếu đoàn khách có số người lẻ thì người khách cuối cùng được xếp vào một phòng trống tiếp theo.
+Nếu đã hết phòng còn trống thì ta sẽ xếp khách vào những phòng mới chỉ có 1 khách theo thứ tự phòng tăng dần.
+In ra số khách của mỗi phòng sau khi xếp.
+Giả sử không có 2 đoàn khách nào đến cùng một lúc.
+Ví dụ 1:
+N = 7, M = 3
+doankhach = [3,7,3]
+Ta in: 2, 2, 2, 2, 2, 1, 2
+Ví dụ 2:
+N = 5, M = 3
+doankhach = [2,3,2]
+Ta in: 2, 2, 1, 2, 0
+"""
+
 if __name__ == "__main__":
     main.clearScreen()
     main.runEx()
