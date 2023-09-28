@@ -3,11 +3,12 @@ import run
 import math
 import calendar
 import random
+from itertools import combinations
 
-def my_replace(old_str = str, *args):
+def my_replace(mystr = str, *args):
     for delimiter in args:
-        new_str = old_str.replace(delimiter, '', 1)
-    return new_str
+        mystr = mystr.replace(delimiter, '', 1)
+    return mystr
 
 def check_prime_number(n = int):
     if n < 2:
@@ -36,6 +37,21 @@ def gen_collatz(n = int):
             reached_1 = True
         else:
             n = 3*n + 1
+
+def gen_prime_num_list(n = int):
+    for num in range(int(n/2 + 1)):
+        if check_prime_number(num):
+            yield num
+
+def gen_ex95(n):
+    a = 1
+    b = 1
+    c = 1
+    i = 0
+    while i != n:
+        yield (a, i+1)
+        c, b, a = a + c, c, b
+        i += 1
 
 class Ex_01():
     def __init__(self):
@@ -854,6 +870,251 @@ doankhach = [2,3,2]
 Ta in: 2, 2, 1, 2, 0
 """
 
+class Ex_92():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        with open("./rwf/2to10.inp", "r") as rf:
+            with open("./rwf/2to.out", "w") as wf:
+                for line in rf:
+                    line = my_replace(line, '\n', '\t', '\r')[::-1]
+                    decimal = 0
+                    if len(line) != 0:
+                        for i in range(len(line)):
+                            decimal += (int(line[i]) * (2**i))
+                        wf.write(str(decimal) + '\n')
+
+    def __str__(self):
+        return """
+File 2to10.inp là file chứa các số nhị phân (mỗi dòng 1 số), hãy chuyển
+các số nhị phân đó sang số thập phân rồi lưu lại vào file 2to10.out (mỗi
+dòng 1 số)
+"""
+
+class Ex_93():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        with open("./rwf/thuaso.inp", "r") as rf:
+            with open("./rwf/thuaso.out", "w") as wf:
+                f_contents = rf.readlines()
+                for i in range(len(f_contents)):
+                    f_contents[i] = int(my_replace(f_contents[i], '\n', '\t', '\r'))
+                prime_list = []
+                for num in gen_prime_num_list(max(f_contents)):
+                    prime_list.append(num)
+                for num in f_contents:
+                    parse = []
+                    idx = 0
+                    while num != 1:
+                        if num % prime_list[idx] == 0:
+                            num /= prime_list[idx]
+                            parse.append(prime_list[idx])
+                        else:
+                            idx += 1
+                    wf.write(str(" ".join(map(str,parse)) + '\n'))
+
+    def __str__(self):
+        return """
+Hãy phân tích một số tự nhiên thành các thừa số nguyên tố
+File thuaso.inp:
+- Chứa các số tự nhiên lớn hơn 1(mỗi số cách nhau một dòng)
+File thuaso.out:
+- Kết quả phân tích từng số trong file thuaso.inp, mỗi một dòng tương
+ứng với kết quả tách được được từ trong file thuaso.inp, các thừa số cách
+nhau bằng một khoảng trắng
+"""
+    
+class Ex_94():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        with open("./rwf/chuoi.inp", "r") as rf:
+            with open("./rwf/chuoi.out", "w") as wf:
+                f_contents = rf.readline()
+                str_lst = []
+                num_lst = []
+                for ch in f_contents:
+                    print(ch)
+                    if ch.isdigit():
+                        num_lst.append(ch)
+                    else:
+                        str_lst.append(ch)
+                if len(num_lst) == 0:
+                    num_lst.append('-')
+                if len(str_lst) == 0:
+                    str_lst.append('-')
+                    
+                wf.write(str("".join(str_lst)) + '\n')
+                wf.write(str("".join(num_lst)) + '\n')
+
+    def __str__(self):
+        return """
+Cho một chuỗi ký tự S (gồm chữ và số). Hãy viết chương trình tách chữ
+và số thành hai chuỗi riêng biệt.
+File chuoi.inp chứa duy nhất 1 chuỗi S
+Hãy tách và ghi vào file chuoi.out 2 dòng, dòng thứ nhất ghi chuỗi ký tự
+chữ, dòng thứ hai ghi chuỗi ký tự số.
+Nếu như chuỗi nào rỗng thì ghi dấu trừ ‘-’.
+"""
+    
+class Ex_95():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        with open("./rwf/dayso.inp", "r") as rf:
+            with open("./rwf/dayso.out", "w") as wf:
+                f_contents = rf.readlines()
+                for i in range(len(f_contents)):
+                    f_contents[i] = int(my_replace(f_contents[i], '\n', '\t', '\r'))
+                output = [0]*len(f_contents)
+                for val, idx in gen_ex95(max(f_contents)):
+                    if idx in f_contents:
+                        output[f_contents.index(idx)] = val
+                for out in output:
+                    wf.write(str(out) + '\n')
+
+    def __str__(self):
+        return """
+Cho một dãy số 1, 1, 1, 2, 3, 4, 6,... (quy luật a[i] = a[i - 1] + a[i - 3])
+Với a[1] = 1, a[2] = 1, a[3] = 1 (3 số đầu tiên)
+File dayso.inp chứa các số nguyên k (k < 1000), mỗi dòng 1 số
+Hãy tìm a[k] trong dãy số và ghi vào file dayso.out
+"""
+    
+class Ex_96():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        def get_sum_uc(n):
+            retval = 0
+            for num in range(1, n):
+                if n%num == 0:
+                    retval += num
+            return (n, retval)
+        with open("./rwf/soban.inp", "r") as rf:
+            with open("./rwf/soban.out", "w") as wf:
+                f_contents = int(my_replace(rf.readline(), '\n', '\t', '\r'))
+                uc_sum = []
+                for num in range(1, f_contents + 1):
+                    uc_sum.append(get_sum_uc(num))
+                rev_uc_sum = []
+                for x, y in uc_sum:
+                    rev_uc_sum.append((y,x))
+                fn = set(uc_sum).intersection(set(rev_uc_sum))
+                fn = sorted([(x, y) for x, y in fn if x < y], key = lambda x: x[0])
+                for tup in fn:
+                    wf.write(str(", ".join(map(str, tup))) + '\n')
+
+    def __str__(self):
+        return """
+Hai số được coi là bạn của nhau khi tổng các ước số (ngoại trừ chính nó)
+của số này bằng số kia và ngược lại, cụ thể: tổng ước số của M = N và
+tổng ước số của N = M thì M và N là bạn
+Trong file soban.inp là số K, hãy liệt kê các cặp số M N (với 1 ≤ M < N ≤ K)
+và ghi vào file soban.out (mỗi cặp một dòng)
+"""
+    
+class Ex_97():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        def distance(p1, p2):
+            return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+            
+        class Point():
+            def __init__(self, x, y):
+                self.x = x
+                self.y = y
+
+        class Triangle():
+            def __init__(self, point1, point2, point3):
+                self.point1 = point1
+                self.point2 = point2
+                self.point3 = point3
+
+            def isTriangle(self):
+                x1, y1 = self.point2.x - self.point1.x, self.point2.y - self.point1.y
+                x2, y2 = self.point3.x - self.point1.x, self.point3.y - self.point1.y
+                
+                return not(abs(x1 * y2 - x2 * y1) < 1e-12)
+            
+            def calculate_side(self):
+                self.s12 = distance(self.point1, self.point2)
+                self.s13 = distance(self.point1, self.point3)
+                self.s23 = distance(self.point2, self.point3)
+            
+            def isIsoscelesTriangle(self):
+                if not(self.isTriangle()):
+                    return False
+                self.calculate_side()
+                if len(set([self.s12, self.s13, self.s23])) != 2:
+                    return False
+                return True
+
+        with open("./rwf/tgcan.inp", "r") as rf:
+            with open("./rwf/tgcan.out", "w") as wf:
+                count = 0
+                N = int(rf.readline())
+                points = []
+                for line in rf:
+                    points.append(tuple(map(int,(line.split()))))
+
+                points = [Point(x,y) for x, y in points]
+                cmb_3 = [Triangle(x,y,z) for x,y,z in list(combinations(set(points), 3))]
+
+                for tri in cmb_3:
+                    if tri.isIsoscelesTriangle():
+                        count += 1
+                wf.write(str(count))
+
+    def __str__(self):
+        return """
+Cho N (N ≤ 100) điểm trên hệ trục tọa độ Oxy, hãy đếm xem có bao
+nhiêu tam giác cân được tạo thành từ các điểm đó.
+File tgcan.inp:
+- Dòng đầu tiên trong file chứa số N
+- N dòng tiếp theo chứa các cặp tọa độ các điểm (mỗi dòng một cặp, mỗi
+số cách nhau một khoảng trắng)
+Ghi vào file tgcan.out số lượng tam giác cân tạo được
+"""
+    
+class Ex_():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        pass
+
+    def __str__(self):
+        return """"""
+    
+class Ex_():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        pass
+
+    def __str__(self):
+        return """"""
+    
+class Ex_():
+    def __init__(self):
+        print(self)
+
+    def execute(self):
+        pass
+
+    def __str__(self):
+        return """"""
+    
 if __name__ == "__main__":
     main.clearScreen()
     main.runEx()

@@ -1,64 +1,51 @@
-class Room():
-    def __init__(self, number):
-        self.capacity = 0
-        self.number = number
-    def add(self, num):
-        self.capacity += num
+from math import sqrt
+from itertools import combinations
 
-class Motel():
-    def __init__(self, max_rooms):
-        self.max_rooms = max_rooms
-        self.all_rooms = [Room(i) for i in range(1, self.max_rooms + 1)]
-        self.room_have_0 = [i for i in range(0, self.max_rooms)]
-        self.room_have_1 = []
-
-    def update_status_0(self, num):
-        if self.all_rooms[num].capacity == 1:
-            self.room_have_1.append(num)
-        self.room_have_0.remove(num)
+def distance(p1, p2):
+    return sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
     
-    def update_status_1(self, num):
-        self.room_have_1.remove(num)
+class Point():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
-class Group():
-    def __init__(self, members):
-        self.remain_members = members
+class Triangle():
+    def __init__(self, point1, point2, point3):
+        self.point1 = point1
+        self.point2 = point2
+        self.point3 = point3
 
-    def room_arrangement_1(self):
-        self.remain_members -= 1
-    def room_arrangement_2(self):
-        self.remain_members -= 2
-
-motel = Motel(5)
-doankhach = [2,3,2]
-group = [Group(mem) for mem in doankhach]
-for grp in range(len(group)):
-    while group[grp].remain_members != 0:
-        if len(motel.room_have_0):
-            if group[grp].remain_members > 1:
-
-                group[grp].room_arrangement_2()
-
-                motel.all_rooms[motel.room_have_0[0]].add(2)
-                motel.update_status_0(motel.room_have_0[0])
-
-            elif group[grp].remain_members == 1:
-
-                group[grp].room_arrangement_1()
-
-                motel.all_rooms[motel.room_have_0[0]].add(1)
-                motel.update_status_0(motel.room_have_0[0])
-            else:
-                break
-
-        elif len(motel.room_have_1):
-            group[grp].room_arrangement_1()
-
-            motel.all_rooms[motel.room_have_1[0]].add(1)
-            motel.update_status_1(motel.room_have_1[0])
-
-        else:
-            break
+    def isTriangle(self):
+        x1, y1 = self.point2.x - self.point1.x, self.point2.y - self.point1.y
+        x2, y2 = self.point3.x - self.point1.x, self.point3.y - self.point1.y
         
-for z in range(0, 5):
-    print(f"Phòng {motel.all_rooms[z].number}: có {motel.all_rooms[z].capacity} người")    
+        return not(abs(x1 * y2 - x2 * y1) < 1e-12)
+    
+    def calculate_side(self):
+        self.s12 = distance(self.point1, self.point2)
+        self.s13 = distance(self.point1, self.point3)
+        self.s23 = distance(self.point2, self.point3)
+    
+    def isIsoscelesTriangle(self):
+        if not(self.isTriangle()):
+            return False
+        self.calculate_side()
+        if len(set([self.s12, self.s13, self.s23])) != 2:
+            return False
+        return True
+
+with open("./rwf/tgcan.inp", "r") as rf:
+    with open("./rwf/tgcan.out", "w") as wf:
+        count = 0
+        N = int(rf.readline())
+        points = []
+        for line in rf:
+            points.append(tuple(map(int,(line.split()))))
+
+        points = [Point(x,y) for x, y in points]
+        cmb_3 = [Triangle(x,y,z) for x,y,z in list(combinations(set(points), 3))]
+
+        for tri in cmb_3:
+            if tri.isIsoscelesTriangle():
+                count += 1
+        wf.write(str(count))
