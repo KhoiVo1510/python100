@@ -4,6 +4,8 @@ import math
 import calendar
 import random
 from itertools import combinations
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 def my_replace(mystr = str, *args):
     for delimiter in args:
@@ -1085,35 +1087,98 @@ số cách nhau một khoảng trắng)
 Ghi vào file tgcan.out số lượng tam giác cân tạo được
 """
     
-class Ex_():
+class Ex_98():
     def __init__(self):
         print(self)
 
     def execute(self):
-        pass
+        with open("./rwf/kinhdoanh.inp", "r") as rf:
+            with open("./rwf/kinhdoanh.out", "w") as wf:
+                N = int(rf.readline())
+                m_in, m_out = 0, 0
+                for line in rf:
+                    tmp = list(map(int,(line.split())))
+                    m_in += tmp[1]
+                    m_out += tmp[0]
+                wf.write(str(m_in - m_out))
 
     def __str__(self):
-        return """"""
+        return """
+Một doanh nhân, sau khi thực hiện mua bán N (N ≤ 100) chuyến hàng,
+mỗi chuyến hàng có tổng giá trị mua M và tổng giá trị bán B (M, B có thể
+lên đến 20 chữ số) mới tính xem mình huề vốn, lời hay lỗ, bao nhiêu tiền.
+Hãy viết chương trình để giúp doanh nhân trên tính toán kết quả kinh doanh.
+File kinhdoanh.inp:
+- Dòng đầu tiên trong file chứa số N
+- N dòng tiếp theo, mỗi dòng chứa cặp số M và B, hai số này cách nhau
+một khoảng trắng
+Ghi ra file kinhdoanh.out số tiền lời (nếu lỗ in ra số âm)
+"""
     
-class Ex_():
+class Ex_99():
     def __init__(self):
         print(self)
 
     def execute(self):
-        pass
+        with open("./rwf/ngay.inp", "r") as rf:
+            with open("./rwf/ngay.out", "w") as wf:
+                f_contents = rf.readline().split()
+                dt_start = datetime.strptime(f_contents[0], "%d/%m/%Y")
+                dt_end = dt_start.date() + relativedelta(days = int(f_contents[1]))
+                wf.write(dt_end.strftime("%d/%m/%Y\n"))
 
     def __str__(self):
-        return """"""
+        return """
+Từ chuỗi ngày/tháng/năm theo cấu trúc dd/mm/yyyy và số N (N ≤ 1000)
+cho trước. Hãy cho biết ngày/tháng/năm (dd/mm/yyyy) sau N ngày.
+File ngay.inp:
+- Chứa ngày/tháng/năm và số N
+File ngay.out:
+- Chứa kết quả là ngày/tháng/năm sau N ngày
+"""
     
-class Ex_():
+class Ex_100():
     def __init__(self):
         print(self)
 
     def execute(self):
-        pass
+        def parse_ex100(N):
+            result = []
+            for a in range(1, int(N/2)+1):
+                tmp_sum = a
+                for b in range(a + 1, int(N/2) + 2):
+                    tmp_sum += b
+                    if tmp_sum < N:
+                        continue
+                    if tmp_sum == N:
+                        result.append((a, b))
+                    break
+            return result
+        
+        with open("./rwf/bieudienso.inp", "r") as rf:
+            with open("./rwf/bieudienso.out", "w") as wf:
+                out = parse_ex100(int(rf.readline()))
+                out = sorted(out, key = lambda a: a[1] - a[0])
+                wf.write(str(len(out)) + '\n')
+                for x, y in out:
+                    lst = []
+                    for num in range(x, y+1):
+                        lst.append(num)
+                    wf.write(str(" + ".join(map(str,lst)) + '\n'))
+
 
     def __str__(self):
-        return """"""
+        return """
+Cho trước số tự nhiên N. Hãy viết chương trình cho biết N có thể biểu
+diễn thành tổng của hai hoặc nhiều số tự nhiên liên tiếp hay không? Nếu
+có, thì bao nhiêu cách và hãy liệt kê tất cả các cách có thể có. Nếu không,
+thì thông báo bằng số 0.
+File bieudienso.inp:
+- Chứa N
+File bieudienso.out:
+- Chứa các trường hợp có thể tách được, mỗi số cách nhau một dấu cộng,
+mỗi dòng một trường hợp
+"""
     
 if __name__ == "__main__":
     main.clearScreen()
