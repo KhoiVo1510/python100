@@ -128,7 +128,7 @@ class Ex_16():
                 break
             print("Type again.\n")
         
-        self.lst = lst
+        self.lst = sorted(lst)
     def execute(self):
         a = float(self.lst[0])
         b = float(self.lst[1])
@@ -159,7 +159,8 @@ class Ex_16():
 (?) Nhập vào 3 số thực dương a, b, c.
 Kiểm tra xem a, b, c có cấu thành độ dài của 1 tam giác được không?
 nếu a, b, c cấu tạo thành được một tam giác, kiểm tra xem đó là tam giác gì
-(tam giác đều, tam giác vuông cân, tam giác vuông, tam giác cân hay tam giác thường)
+(tam giác đều, tam giác vuông cân, tam giác vuông, tam giác cân 
+hay tam giác thường)
 """
 
 class Ex_21():
@@ -200,7 +201,7 @@ class Ex_21():
     def __str__(self):
         return """
 (?) Nhập vào ngày, tháng. Hãy tính và in ra xem ngày nhập vào cách ngày
-đầu năm bao nhiêu ngày (giả sư năm đó không phải là năm nhuận).
+đầu năm bao nhiêu ngày (giả sử năm đó không phải là năm nhuận).
 """
 
 class Ex_27():
@@ -249,11 +250,12 @@ class Ex_32():
         for num in range(1, self.b[0]):
             if self.b[0]%num == 0:
                 self.b[1].append(num)
+        common = set(self.a[1]).intersection(self.b[1])
         print ("===> Output: ")
         print(f"Ước của a: {self.a[1]}.")
         print(f"Ước của b: {self.b[1]}.")
-        uc = set(self.a[1]).intersection(set(self.b[1]))
-        print(f"Ước chung lớn nhất của a và b: {max(uc)}")
+        print(f"Ước chung của a và b: {common}")
+        print(f"Ước chung lớn nhất của a và b: {max(common)}")
 
     def __str__(self):
         return """
@@ -343,19 +345,19 @@ class Ex_49():
     def execute(self):
         _str = input("Nhập chuỗi: ")
 
-        result_1 = 0
+        result_1 = []
         for let in _str:
             if let.isdigit():
-                result_1 += int(let)
+                result_1.append(int(let))
 
-        result_2 = 0
         newstr = ''.join((ch if ch in '0123456789' else ' ') for ch in _str)
-        num_list = [int(i) for i in newstr.split()]
-        for num in num_list:
-            result_2 += num
+        result_2 = [int(i) for i in newstr.split()]
+
         print("===> Output: ")
-        print(f"Tổng giá trị ký tự số trong chuỗi = {result_1}")
-        print(f"Tổng giá trị các con số trong chuỗi = {result_2}")
+        print(f"Tất cả ký tự số trong chuỗi: {result_1}")
+        print(f"Tổng giá trị ký tự số trong chuỗi = {sum(result_1)}")
+        print(f"Tất cả các số trong chuỗi: {result_2}")
+        print(f"Tổng giá trị các con số trong chuỗi = {sum(result_2)}")
 
     def __str__(self):
         return """
@@ -371,17 +373,19 @@ class Ex_52():
     def execute(self):
         s1 = input("Nhập vào chuỗi a: ")
         s2 = input("Nhập vào chuỗi b: ")
-        index = s1.find(s2)
-        if index == -1:
-            print("Không có chuỗi b trong chuỗi a.")
-        else:
-            s1 = s1[:index] + s1[index + len(s2):]
-            print("===> Output: ", s1)
+        while True:
+            index = s1.find(s2)
+            if index == -1:
+                break
+            else:
+                s1 = s1[:index] + s1[index + len(s2):]
+        print("===> Output: ", s1)
 
     def __str__(self):
         return """
 (?)Nhập vào chuỗi a và chuỗi b
-Hãy xóa chuỗi b trong chuỗi a rồi in lại chuỗi a ra màn hình (không dùng hàm replace)"""
+Hãy xóa chuỗi b trong chuỗi a rồi in lại chuỗi a ra màn hình (không dùng hàm replace)
+"""
 
 class Ex_68():
     def __init__(self):
@@ -415,7 +419,7 @@ class Ex_68():
         min_i = lst.index(min(lst))
         lst[max_i], lst[min_i] = lst[min_i], lst[max_i]
 
-        print(f"===> Output 1: {result_1}")
+        print(f"===> Output 1: {len(result_1)}; {result_1}")
         print(f"===> Output 2: {list(even + zero + odd)}")
         print(f"===> Output 3: {lst}")
         
@@ -425,7 +429,8 @@ class Ex_68():
 (?) Nhập vào một list số nguyên L:
 - hãy đếm số lượng giá trị trong list thỏa tính chất: “lớn hơn tất cả các giá trị đứng đằng trước nó
 - hãy đưa các số chẵn trong list về đầu list, số lẻ về cuối list và các phần tử 0 nằm ở giữa
-- hãy biến đổi L bằng cách thay đổi vị trí giữa giá trị nhỏ nhất và lớn nhất"""
+- hãy biến đổi L bằng cách thay đổi vị trí giữa giá trị nhỏ nhất và lớn nhất
+"""
 
 class Ex_80():
     def __init__(self):
@@ -461,8 +466,10 @@ class Ex_80():
 
     def __str__(self):
         return """
-(?) Viết hàm đưa vào 1 list số nguyên L và 1 số nguyên dương a. Hãy tìm và
-trả về một list mới có số phần tử là a, giá trị các phần tử là các số nguyên tố tìm được trong list L"""
+(?) Viết hàm đưa vào 1 list số nguyên L và 1 số nguyên dương a.
+Hãy tìm và trả về một list mới có số phần tử là a, giá trị
+các phần tử là các số nguyên tố tìm được trong list L
+"""
     
 class Ex_81():
     def __init__(self):
@@ -481,8 +488,8 @@ class Ex_81():
 
     def execute(self):
         def return_nth_value(L, a):
-            L.sort()
-            return_value = L[a]
+            L = sorted(L, reverse=True)
+            return_value = L[a-1]
             cnt = L.count(return_value)
             return (return_value, cnt)
 
@@ -687,8 +694,9 @@ class Ex_89():
                 # self.lst_B = list(float(x) for x in input("Nhập list B: ").split())
 
                 self.lst_A = [random.randrange(1, 10, 1) for _ in range(50)]
+                print(f"Đô la: {self.lst_A}")
                 self.lst_B = [random.randrange(1, 10, 1) for _ in range(50)]
-
+                print(f"Euro: {self.lst_B}")
                 self.u = float(input("Nhập U (Đô la): "))
                 self.v = float(input("Nhập V (Euro): "))
                 if len(self.lst_A) == len(self.lst_B):
@@ -857,7 +865,8 @@ class Ex_91():
 
     def __str__(self):
         return """
-Một khách sạn có N phòng đôi được đánh số từ 1 đến N và M đoàn khách. Với mỗi đoàn khách, ta xếp mỗi cặp khách của đoàn vào một phòng trống theo thứ tự phòng tăng dần.
+Một khách sạn có N phòng đôi được đánh số từ 1 đến N và M đoàn khách. Với mỗi đoàn khách,
+ta xếp mỗi cặp khách của đoàn vào một phòng trống theo thứ tự phòng tăng dần.
 Nếu đoàn khách có số người lẻ thì người khách cuối cùng được xếp vào một phòng trống tiếp theo.
 Nếu đã hết phòng còn trống thì ta sẽ xếp khách vào những phòng mới chỉ có 1 khách theo thứ tự phòng tăng dần.
 In ra số khách của mỗi phòng sau khi xếp.

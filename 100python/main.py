@@ -17,6 +17,13 @@ def printHeader(script):
 def runEx():
     # Input value
     print("Please choose Exercise (use space to select Multi Exercises)")
+    allAtribute = dir(exScript)
+    availableEx = []
+    for att in allAtribute:
+        if 'Ex_' in att:
+            availableEx.append(att)
+    availableEx = sorted(availableEx, key = lambda x:  int(x[3:]))
+    print("List exercise scripts available:\n", availableEx)
 
     selected_Ex = input("Run exercise: ").split()
 
